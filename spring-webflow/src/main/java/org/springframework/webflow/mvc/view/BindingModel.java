@@ -38,6 +38,7 @@ import org.springframework.binding.message.MessageCriteria;
 import org.springframework.binding.message.Severity;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.AbstractErrors;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -120,7 +121,11 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		MessageCriteria messageCriteria;
 		if (field.endsWith("*")) {
 			String prefix = field.substring(0, field.length() - 1);
-			messageCriteria = new FieldPrefixErrorMessage(prefix);
+			if (StringUtils.isEmpty(prefix)) {
+				messageCriteria = ERRORS_FIELD_SOURCE;
+			} else {
+				messageCriteria = new FieldPrefixErrorMessage(prefix);
+			}
 		} else {
 			messageCriteria = new FieldErrorMessage(field);
 		}
